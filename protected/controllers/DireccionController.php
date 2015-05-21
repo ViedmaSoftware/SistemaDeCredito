@@ -13,10 +13,11 @@ class DireccionController extends Controller
 	 */
 	public function filters()
 	{
-		return array(
+            return array(array('CrugeAccessControlFilter'));
+		/*return array(
 			'accessControl', // perform access control for CRUD operations
 			'postOnly + delete', // we only allow deletion via POST request
-		);
+		);*/
 	}
 
 	/**
@@ -63,20 +64,48 @@ class DireccionController extends Controller
 	public function actionCreate()
 	{
 		$model=new Direccion;
-
+                $personaDireccion = new PersonaDireccion;
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
 		if (isset($_POST['Direccion'])) {
+                        
 			$model->attributes=$_POST['Direccion'];
+                        
 			if ($model->save()) {
-				$this->redirect(array('view','id'=>$model->id));
+                                $personaDireccion->id_persona=$_POST['Direccion']['id_persona'];
+                                $personaDireccion->id_direccion=$model->id;
+                                $personaDireccion->save();
+				$this->redirect(array('persona/view','id'=>$_POST['Direccion']['id_persona']));
 			}
 		}
 
 		$this->render('create',array(
-			'model'=>$model,
+			'model'=>$model,'id_persona'=>$_GET['id']
 		));
+	}
+	/**
+	 * Creates a new model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 */
+	public function actionCreateModal()
+	{
+		$model=new Direccion;
+                $personaDireccion = new PersonaDireccion;
+
+                $this->performAjaxValidation($model);
+		if (isset($_POST['Direccion'])) {
+                        
+			$model->attributes=$_POST['Direccion'];
+                        
+			if ($model->save()) {
+                                $personaDireccion->id_persona=$_POST['Direccion']['id_persona'];
+                                $personaDireccion->id_direccion=$model->id;
+                                $personaDireccion->save();
+				$this->redirect(array('persona/view','id'=>$_POST['Direccion']['id_persona']));
+			}
+		}
+                echo "<script>alert('Error! Campos Invalidos');</script>";
 	}
 
 	/**

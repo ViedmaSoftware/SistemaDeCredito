@@ -247,6 +247,9 @@ ul.auth-item  li.loop{
 	
 }
 
+#auth-item-tree ul .checked {
+	color: blue;
+}
 #auth-item-tree ul ul .checked {
 	color: blue;
 }

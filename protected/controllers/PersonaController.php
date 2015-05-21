@@ -53,12 +53,13 @@ class PersonaController extends Controller
 	public function actionView($id)
 	{
             $model = $this->loadModel($id);
-           
+            $Direccion = new Direccion;
              
            
 	    $this->render('view',array(
-			'model'=>$model)
-                             );
+                                    'model'=>$model,
+                                    'Direccion'=>$Direccion,)
+                         );
 	}
 
 	/**
@@ -276,5 +277,20 @@ class PersonaController extends Controller
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
+	}
+        
+        public function actionPrueba()
+	{
+            $lista=array('opcion1','opcion2','opcion3');
+            
+            $listajs=  CJavaScript::encode($lista);
+            Yii::app()->getClientScript()->registerScript('lista', 'var opciones='.$listajs.';',  CClientScript::POS_HEAD);
+            $this->render('vistaAngular');
+	}
+        
+        public function actionOpciones()
+	{
+          $lista=array('opcion1','opcion2','opcion3');
+          echo json_encode($lista);
 	}
 }

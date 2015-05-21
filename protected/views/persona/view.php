@@ -15,7 +15,7 @@ $this->menu=array(
 	array('label'=>'Borrar Persona', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
 	array('label'=>'Adminitrar Persona', 'url'=>array('admin')),
 	array('label'=>'Agregar Datos Laborales', 'url'=>array('#')),
-	array('label'=>'Agregar otra direccion', 'url'=>array('#')),
+	array('label'=>'Agregar otra direccion', 'url'=>array("#"), 'linkOptions'=>array('data-toggle'=>'modal', 'data-target'=>"#myModal")),
 );
 ?>
 
@@ -43,50 +43,39 @@ $this->menu=array(
 	),
 )); ?>
 
-<?php /*$this->widget('yiiwheels.widgets.grid.WhGridView', array(
-    'fixedHeader' => true,
-    'headerOffset' => 40,
-    'type' => 'striped',
-    'dataProvider' => Contacto::model()->search(),
-    'responsiveTable' => true,
-    'template' => "{items}",
-    'columns'=>array(
-		'id',
-		'telefono_fijo',
-		'telefono_movil',
-		'telefono_laboral',
-		'correo_electronico',
-		'pagina_web',
-		/*
-		'id_persona',
-		
-		array(
-			'class'=>'bootstrap.widgets.TbButtonColumn',
-		),
-	),
-));*/
+<?php 
 
-/*Fincha de Direcciones*/
-echo "<table class='table table-striped'>";
+/*Ficha de Direcciones*/
+
+echo "<table class='table table-striped' id='tablaDirecciones'>";
 echo "<thead>
         <tr>
            <th>Localidad</th>
            <th>Direccion</th>
+           <th>Departamento</th>
+           <th>Piso</th>
+           <th>Escalera</th>
            <th>Tipo Dirección</th>
-        </tr>
+           <th></th>
+       </tr>
       </thead>
       <tbody>";
 foreach ($model->personaDireccions as $personaDireccion) {
     
       echo" <tr>
-                <td>{$personaDireccion->idDireccion->idLocalidad->nombre}</td>
-                <td>{$personaDireccion->idDireccion->nombre} {$personaDireccion->idDireccion->nrocalle}</td>
-                <td>{$personaDireccion->idDireccion->idTipoDireccion->detalle}</td>
+                <td id='localidad'>{$personaDireccion->idDireccion->idLocalidad->nombre}</td>
+                <td id='direccion'>{$personaDireccion->idDireccion->nombre} {$personaDireccion->idDireccion->nrocalle} </td>
+                <td id='altura'>{$personaDireccion->idDireccion->departamento}</td>
+                <td id='altura'>{$personaDireccion->idDireccion->piso}</td>
+                <td id='altura'>{$personaDireccion->idDireccion->escalera}</td>
+                <td id='tipoDireccion'>{$personaDireccion->idDireccion->idTipoDireccion->detalle}</td>
+                
             </tr>";
         
 }
 echo "</tbody>
      </table>";
+
 
 /*Fincha de Contactos*/
 echo "<table class='table table-striped'>";
@@ -111,3 +100,63 @@ echo "</tbody>
      </table>";
 
 ?>
+
+<!-- Modal Formulario Direccion -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Fomulario Direccion</h4>
+      </div>
+      <div class="modal-body">
+         <?php $form=$this->beginWidget('bootstrap.widgets.TbActiveForm', array(
+	'id'=>'direccion-form',
+        'action'=>'/SistemaDeCredito/index.php?r=direccion/createModal',
+	// Please note: When you enable ajax validation, make sure the corresponding
+	// controller action is handling ajax validation correctly.
+	// There is a call to performAjaxValidation() commented in generated controller code.
+	// See class documentation of CActiveForm for details on this.
+	'enableAjaxValidation'=>true,
+        )); ?>
+
+        <p class="help-block">Fields with <span class="required">*</span> are required.</p>
+
+        <?php echo $form->errorSummary($Direccion); ?>
+            
+            <?php echo "<input type='hidden' name='Direccion[id_persona]' value='$model->id'>"; ?>
+        
+            <?php echo $form->textFieldControlGroup($Direccion,'nombre',array('span'=>5,'maxlength'=>35)); ?>
+
+            <?php echo $form->textFieldControlGroup($Direccion,'nrocalle',array('span'=>5,'maxlength'=>5)); ?>
+
+            <?php echo $form->textFieldControlGroup($Direccion,'escalera',array('span'=>5,'maxlength'=>5,'type'=>'hidden')); ?>
+
+            <?php echo $form->textFieldControlGroup($Direccion,'piso',array('span'=>5,'maxlength'=>5)); ?>
+
+            <?php echo $form->textFieldControlGroup($Direccion,'departamento',array('span'=>5,'maxlength'=>5)); ?>
+            
+            <?php echo $form->dropDownListControlGroup($Direccion, 'id_tipo_direccion', 
+                                                CHtml::listData(TipoDireccion::model()->findAll(),'id', 'detalle'),
+                                                 array('empty' => 'Seleccionar')
+                                             ); ?>
+            
+            <?php echo $form->dropDownListControlGroup($Direccion, 'id_localidad', 
+                                                CHtml::listData(Localidad::model()->findAll(),'id', 'nombre'),
+                                                 array('empty' => 'Seleccionar')
+                                             ); ?>
+
+        
+
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Guardar Dirección</button>
+        
+      </div>
+        <?php $this->endWidget(); ?>
+    </div>
+  </div>
+</div>
+

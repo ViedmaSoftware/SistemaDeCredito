@@ -76,7 +76,7 @@ class CrugeAccessControlFilter extends CFilter
         } else {
             // no esta autorizado
             //
-            $this->reportError($actionItemName);
+            $this->reportError('ACCESO DENEGADO!');
         }
         /*
         }

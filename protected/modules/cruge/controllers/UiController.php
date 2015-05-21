@@ -122,43 +122,46 @@ class UiController extends Controller
 
     public function actionLogin()
     {
+        if(Yii::app()->user->isGuest){
+            $this->layout = CrugeUtil::config()->loginLayout;
 
-        $this->layout = CrugeUtil::config()->loginLayout;
+            $model = Yii::app()->user->um->getNewCrugeLogon('login');
 
-        $model = Yii::app()->user->um->getNewCrugeLogon('login');
+            // por ahora solo un metodo de autenticacion por vez es usado, aunque sea un array en config/main
+            //
+            $model->authMode = CrugeFactory::get()->getConfiguredAuthMethodName();
 
-        // por ahora solo un metodo de autenticacion por vez es usado, aunque sea un array en config/main
-        //
-        $model->authMode = CrugeFactory::get()->getConfiguredAuthMethodName();
+            Yii::app()->user->setFlash('loginflash', null);
 
-        Yii::app()->user->setFlash('loginflash', null);
+            Yii::log(__CLASS__ . "\nactionLogin\n", "info");
 
-        Yii::log(__CLASS__ . "\nactionLogin\n", "info");
+            if (isset($_POST[CrugeUtil::config()->postNameMappings['CrugeLogon']])) {
+                $model->attributes = $_POST[CrugeUtil::config()->postNameMappings['CrugeLogon']];
+                if ($model->validate()) {
+                    if ($model->login(false) == true) {
 
-        if (isset($_POST[CrugeUtil::config()->postNameMappings['CrugeLogon']])) {
-            $model->attributes = $_POST[CrugeUtil::config()->postNameMappings['CrugeLogon']];
-            if ($model->validate()) {
-                if ($model->login(false) == true) {
+                        Yii::log(__CLASS__ . "\nCrugeLogon->login() returns true\n", "info");
 
-                    Yii::log(__CLASS__ . "\nCrugeLogon->login() returns true\n", "info");
-
-                    // a modo de conocimiento, Yii::app()->user->returnUrl es
-                    // establecida automaticamente por CAccessControlFilter cuando
-                    // preFilter llama a accessDenied quien a su vez llama a
-                    // CWebUser::loginRequired que es donde finalmente se llama a setReturnUrl
-                    $this->redirect(Yii::app()->user->returnUrl);
+                        // a modo de conocimiento, Yii::app()->user->returnUrl es
+                        // establecida automaticamente por CAccessControlFilter cuando
+                        // preFilter llama a accessDenied quien a su vez llama a
+                        // CWebUser::loginRequired que es donde finalmente se llama a setReturnUrl
+                        $this->redirect(Yii::app()->user->returnUrl);
+                    } else {
+                        Yii::app()->user->setFlash('loginflash', Yii::app()->user->getLastError());
+                    }
                 } else {
-                    Yii::app()->user->setFlash('loginflash', Yii::app()->user->getLastError());
+                    Yii::log(
+                        __CLASS__ . "\nCrugeUser->validate es false\n" . CHtml::errorSummary($model)
+                        ,
+                        "error"
+                    );
                 }
-            } else {
-                Yii::log(
-                    __CLASS__ . "\nCrugeUser->validate es false\n" . CHtml::errorSummary($model)
-                    ,
-                    "error"
-                );
             }
+            $this->render('login', array('model' => $model));
+        }else{
+            $this->redirect('index.php?r=persona/admin');
         }
-        $this->render('login', array('model' => $model));
     }
 
     public function actionPwdRec()

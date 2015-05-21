@@ -65,7 +65,7 @@ class LaboralController extends Controller
 		$model=new Laboral;
                 $Direccion = new Direccion;
 		$laboralDireccion = new LaboralDireccion();
-                $TipoDireccion = new TipoDireccion;
+                
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);

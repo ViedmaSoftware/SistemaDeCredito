@@ -33,9 +33,9 @@
                                     array('label' => 'Buscar', 'url' => 'index.php?r=persona/admin'),                                    
                                     array('label' => 'Agregar Tipo Documento', 'url' => 'index.php?r=tipoDocumento/create'),                                    
                                     array('label' => 'Agregar Tipo Direccion', 'url' => 'index.php?r=tipoDireccion/create'),                                    
-                                    array('label' => 'Agregar Estado Civil', 'url' => 'index.php?r=estadoCivil/create'),                                    
+                                    array('label' => 'Agregar Estado Civil', 'url' => 'index.php?r=estadoCivil/create',),                                    
                                     
-                                )),
+                                ),'visible'=>!Yii::app()->user->isGuest),
                             array('label'=>'Administrar Usuarios', 'url'=>Yii::app()->user->ui->userManagementAdminUrl, 'visible'=>!Yii::app()->user->isGuest),
                             array('label'=>'Login'
                                     , 'url'=>Yii::app()->user->ui->loginUrl

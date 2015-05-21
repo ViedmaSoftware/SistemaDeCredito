@@ -19,6 +19,7 @@
 
     <?php echo $form->errorSummary($model); ?>
 
+             <?php echo "<input type='hidden' name='Direccion[id_persona]' value='$id_persona'>"; ?>
             <?php echo $form->textFieldControlGroup($model,'nombre',array('span'=>5,'maxlength'=>35)); ?>
 
             <?php echo $form->textFieldControlGroup($model,'nrocalle',array('span'=>5,'maxlength'=>5)); ?>
