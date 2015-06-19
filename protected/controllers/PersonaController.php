@@ -13,7 +13,7 @@ class PersonaController extends Controller
 	 */
 	public function filters()
 	{
-            return array(array('CrugeAccessControlFilter'));
+            //return array(array('CrugeAccessControlFilter'));
 		/*return array(
 			'accessControl', // perform access control for CRUD operations
 			'postOnly + delete', // we only allow deletion via POST request
@@ -292,5 +292,104 @@ class PersonaController extends Controller
 	{
           $lista=array('opcion1','opcion2','opcion3');
           echo json_encode($lista);
+	}
+        
+        public function actionObtenerDirecciones($id)
+	{
+          //$scope.direcciones = [{nombre:'calleangular',nrocalle:'333',escalera:'',piso:'',departamento:'',id_tipo_direccion:'1',id_localidad:1}];
+          /*$lista=array(
+                    array('nombre'=>'una direccion','nrocalle'=>'123','escalera'=>'','piso'=>'','departamento'=>'','id_tipo_direccion'=>'1','id_licalidad'=>1),
+                    array('nombre'=>'aaaa','nrocalle'=>'222','escalera'=>'','piso'=>'','departamento'=>'','id_tipo_direccion'=>'1','id_licalidad'=>1)
+              );*/
+          
+          $persona =  Persona::model()->findByPk($id);
+          $personaDirecciones=$persona->personaDireccions;
+          
+          foreach ($personaDirecciones as $pDireccion) {
+              $lista[]=$pDireccion->idDireccion;
+          }
+          
+          
+          //echo $_GET['callback'].'('.CJSON::encode($lista).')';
+          echo CJSON::encode($lista);
+          exit();
+	}
+        
+        public function actionAgregarDireccion()
+	{
+          
+          
+          $contenidoFlujo = file_get_contents("php://input");
+          $objetoDireccion = CJSON::decode($contenidoFlujo);
+          $nuevaDireccion = new Direccion();
+          $nuevaDireccion->attributes = $objetoDireccion;
+          
+          //cargamos la persona a modificar
+          $persona = Persona::model()->findByPk($objetoDireccion['id_persona']);
+          
+          $transaccion = Yii::app()->db->beginTransaction();
+          try{
+              
+            if($nuevaDireccion->save()){
+                $persona_direccion = new PersonaDireccion;
+                $persona_direccion->id_persona = $persona->id;
+                $persona_direccion->id_direccion = $nuevaDireccion->id;
+                $persona_direccion->save();
+            }else{
+                
+                throw new Exception('La direccion no se pudo agregar');
+            }
+            
+            $transaccion->commit();
+          
+            
+          }catch(Exception $e){
+                       $transaction->rollback();
+          }
+          
+          echo CJSON::encode($nuevaDireccion);
+          exit();
+	}
+        
+        public function actionGuardarDireccion()
+	{
+          
+          
+          $contenidoFlujo = file_get_contents("php://input");
+          $objetoDireccion = CJSON::decode($contenidoFlujo);
+          $nuevaDireccion = Direccion::model()->findByPk($objetoDireccion['id']);
+          $nuevaDireccion->attributes = $objetoDireccion;
+          
+          $transaccion = Yii::app()->db->beginTransaction();
+          try{
+              
+            if(!$nuevaDireccion->save()){
+                
+                throw new Exception('La direccion no se pudo modificar');
+            }
+            
+            $transaccion->commit();
+          
+            
+          }catch(Exception $e){
+                       $transaccion->rollback();
+          }
+          
+          echo CJSON::encode($nuevaDireccion);
+          exit();
+	}
+        
+        public function actionBorrarDireccion()
+	{
+          
+          
+          $contenidoFlujo = file_get_contents("php://input");
+          $objetoDireccion = CJSON::decode($contenidoFlujo);
+          //$nuevaDireccion = Direccion::model()->findByPk($objetoDireccion['id'])->delete();
+          
+          $perDir= PersonaDireccion::model()->find("id_direccion={$objetoDireccion['id']}")->delete();
+          
+          echo CJSON::encode($perDir);
+          exit();
 	}
 }

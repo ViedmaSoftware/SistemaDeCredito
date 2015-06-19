@@ -22,11 +22,11 @@ Last Name: <input type="text" ng-model="lastName"><br>
 var app = angular.module('myApp', []);
 app.controller('myCtrl', function($scope,$http) {
     $http.get("index.php?r=persona/opciones").then(function(response){
-        $scope.opciones = response.data;
+        //$scope.opciones = response.data;
     });
     $scope.firstName= "John";
     $scope.lastName= "Doe";
-    //$scope.opciones=opciones;
+    $scope.opciones=opciones;
     $scope.alerta= function (valor){
         alert(valor)
     };

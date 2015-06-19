@@ -100,63 +100,161 @@ echo "</tbody>
      </table>";
 
 ?>
+<script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl;?>/js/angular.min.js"></script>
+<div ng-app="myApp" ng-controller="myCtrl">
+    
+    <table class='table table-striped' id='tablaDirecciones'>
+        <thead>
+            <tr>
+               <th>Localidad</th>
+               <th>Direccion</th>
+               <th>Departamento</th>
+               <th>Piso</th>
+               <th>Escalera</th>
+               <th>Tipo Dirección</th>
+           </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="direccion in direcciones">
+                <td>{{direccion.id_localidad}}</td>
+                <td>{{direccion.nombre+' '+direccion.nrocalle}}</td>
+                <td>{{direccion.departamento}}</td>
+                <td>{{direccion.piso}}</td>
+                <td>{{direccion.escalera}}</td>
+                <td>{{direccion.idTipoDireccion.detalle}}</td>
+                <td>
+                    
+                    <button class="btn btn-warning" ng-click="modificarDireccion(direccion)" data-toggle="modal" data-target="#myModal"><i class="icon-pencil"></i></button>
+                    <button class="btn btn-warning" ng-click="borrarDireccion(direccion)"><i class="icon-trash"></i></button>
+                </td>
+            </tr>
+        
+        </tbody>
+     </table>
+    
+    
+    
 
-<!-- Modal Formulario Direccion -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Fomulario Direccion</h4>
+
+
+
+
+    
+    <!-- Modal Formulario Direccion -->
+  <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+    <div class="modal-dialog">
+      <div class="modal-content" >
+        <div class="modal-header">
+          <button type="button" class="close" ng-click="cancelar()" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">Fomulario Direccion</h4>
+        </div>
+        <div class="modal-body">
+           
+           
+            <div class="form-control">
+                <input type="text" ng-model="nuevaDireccion.nombre" placeholder="Nombre de la calle">
+                <input type="text" ng-model="nuevaDireccion.nrocalle" placeholder="Altura">
+                <input type="text" ng-model="nuevaDireccion.escalera" placeholder="Escalera">
+                <input type="text" ng-model="nuevaDireccion.piso" placeholder="Piso">
+                <input type="text" ng-model="nuevaDireccion.departamento" placeholder="Departamento">
+                <input type="text" ng-model="nuevaDireccion.id_tipo_direccion" placeholder="Tipo Direccion">
+                <input type="text" ng-model="nuevaDireccion.id_localidad" placeholder="Localidad">
+                <input type="hidden" ng-model="nuevaDireccion.id_persona" value="{{nuevaDireccion.id_persona=<?php if(isset($model->id)){echo $model->id;}?>}}">
+
+            </div><!-- form -->
+        </div>
+          
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" ng-click="cancelar()" data-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-primary" ng-show="agregando" ng-click="agregarDireccion()" data-dismiss="modal">Agregar Dirección</button>
+          <button type="button" class="btn btn-success" ng-hide="agregando" ng-click="guardarDireccion()" data-dismiss="modal">Guardar Modificacion</button>
+          
+        </div>
       </div>
-      <div class="modal-body">
-         <?php $form=$this->beginWidget('bootstrap.widgets.TbActiveForm', array(
-	'id'=>'direccion-form',
-        'action'=>'/SistemaDeCredito/index.php?r=direccion/createModal',
-	// Please note: When you enable ajax validation, make sure the corresponding
-	// controller action is handling ajax validation correctly.
-	// There is a call to performAjaxValidation() commented in generated controller code.
-	// See class documentation of CActiveForm for details on this.
-	'enableAjaxValidation'=>true,
-        )); ?>
-
-        <p class="help-block">Fields with <span class="required">*</span> are required.</p>
-
-        <?php echo $form->errorSummary($Direccion); ?>
-            
-            <?php echo "<input type='hidden' name='Direccion[id_persona]' value='$model->id'>"; ?>
-        
-            <?php echo $form->textFieldControlGroup($Direccion,'nombre',array('span'=>5,'maxlength'=>35)); ?>
-
-            <?php echo $form->textFieldControlGroup($Direccion,'nrocalle',array('span'=>5,'maxlength'=>5)); ?>
-
-            <?php echo $form->textFieldControlGroup($Direccion,'escalera',array('span'=>5,'maxlength'=>5,'type'=>'hidden')); ?>
-
-            <?php echo $form->textFieldControlGroup($Direccion,'piso',array('span'=>5,'maxlength'=>5)); ?>
-
-            <?php echo $form->textFieldControlGroup($Direccion,'departamento',array('span'=>5,'maxlength'=>5)); ?>
-            
-            <?php echo $form->dropDownListControlGroup($Direccion, 'id_tipo_direccion', 
-                                                CHtml::listData(TipoDireccion::model()->findAll(),'id', 'detalle'),
-                                                 array('empty' => 'Seleccionar')
-                                             ); ?>
-            
-            <?php echo $form->dropDownListControlGroup($Direccion, 'id_localidad', 
-                                                CHtml::listData(Localidad::model()->findAll(),'id', 'nombre'),
-                                                 array('empty' => 'Seleccionar')
-                                             ); ?>
-
-        
-
-        
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Guardar Dirección</button>
-        
-      </div>
-        <?php $this->endWidget(); ?>
     </div>
-  </div>
-</div>
+  </div> <!--Cierre del formulario Modal-->
+  
+</div> <!--Cierre de Angular-->
 
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope,$http) {
+    $scope.agregando=true;
+    $http.get("<?php echo $this->createUrl('obtenerDirecciones',array('id'=>$model->id)); ?>").then(function(response){
+        $scope.direcciones = response.data;
+    });
+    
+   
+    
+    //$scope.nuevaDireccion = {nombre:'',nrocalle:'',escalera:'',piso:'',departamento:'',id_tipo_direccion:'',id_localidad:''};
+    //$scope.direcciones = [{nombre:'calleangular',nrocalle:'333',escalera:'',piso:'',departamento:'',id_tipo_direccion:'1',id_localidad:1}];
+    
+    
+    $scope.agregarDireccion = function (){
+        //$scope.id_persona=<?php //echo $model->id;?>;
+        //$scope.data = [{$scope.nuevaDireccion},{$scope.nuevaDireccion}];
+        $http.post("<?php echo $this->createUrl('agregarDireccion'); ?>",$scope.nuevaDireccion).then(function(response){
+            $scope.direcciones.push(response.data);
+        });
+        //alert('agregamos');
+        
+        
+        
+    };
+    
+    $scope.borrarDireccion = function (direccion){
+        //alert('borramos');
+        $http.post("<?php echo $this->createUrl('borrarDireccion'); ?>",direccion).then(function(response){
+            
+            $scope.direcciones = $scope.direcciones.filter(function(item){
+                return item.id!==direccion.id;
+            });
+        });
+        
+        
+    };
+    
+    $scope.modificarDireccion = function (direccion){
+        //alert('modificamos');
+        $scope.agregando = false;
+        angular.copy(direccion,$scope.nuevaDireccion); 
+        
+    };
+    
+    $scope.guardarDireccion = function (){
+        //$scope.id_persona=<?php //echo $model->id;?>;
+        //$scope.data = [{$scope.nuevaDireccion},{$scope.nuevaDireccion}];
+        $http.post("<?php echo $this->createUrl('guardarDireccion'); ?>",$scope.nuevaDireccion).then(function(response){
+            
+            $scope.nuevaDireccion = {};
+            angular.forEach($scope.direcciones, function(item){
+                if(item.id==response.data.id){
+                    angular.copy(response.data,item);
+                }
+            });
+            $scope.agregando = true;
+            
+           /* $scope.direcciones = $scope.direcciones.filter(function(item){
+                return item.id!==response.data.id;
+            });
+            
+            $scope.direcciones.push(response.data);*/
+            
+            
+            //alert('guardamos');
+        });
+        //alert('agregamos');
+        
+        
+        
+    };
+    
+    $scope.cancelar = function (){
+        //alert('cancelamos');
+        $scope.agregando = true;
+        $scope.nuevaDireccion = {};
+        
+    };
+    
+});
+</script>

@@ -178,6 +178,17 @@ class DireccionController extends Controller
 			'model'=>$model,
 		));
 	}
+	
+        public function actionBuscarDireccionViaHttp()
+	{
+            $persona = Persona::model()->find("id={$_GET['id_persona']}");
+            
+            foreach ($persona->personaDireccions as $personaDireccion) {
+                $direcciones = $personaDireccion->idDireccion;
+            }
+            
+            echo json_encode($direcciones);;
+	}
 
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.

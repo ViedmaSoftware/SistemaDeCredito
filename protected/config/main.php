@@ -129,8 +129,9 @@ return array(
 			'allowAutoLogin'=>true,
 		),*/
 		// uncomment the following to enable URLs in path-format
-		/*
-		'urlManager'=>array(
+		
+		//predeterminado
+                'urlManager'=>array(
 			'urlFormat'=>'path',
 			'rules'=>array(
 				'<controller:\w+>/<id:\d+>'=>'<controller>/view',
@@ -138,12 +139,26 @@ return array(
 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 			),
 		),
-		/*
+		/*'urlManager'=>array(
+                    'urlFormat'=>'path',
+                    'rules'=>array(
+                        'post/<id:\d+>/<title:.*?>'=>'post/view',
+                        'posts/<tag:.*?>'=>'post/index',
+                        // REST patterns
+                        array('api/list', 'pattern'=>'api/<model:\w+>', 'verb'=>'GET'),
+                        array('api/view', 'pattern'=>'api/<model:\w+>/<id:\d+>', 'verb'=>'GET'),
+                        array('api/update', 'pattern'=>'api/<model:\w+>/<id:\d+>', 'verb'=>'PUT'),
+                        array('api/delete', 'pattern'=>'api/<model:\w+>/<id:\d+>', 'verb'=>'DELETE'),
+                        array('api/create', 'pattern'=>'api/<model:\w+>', 'verb'=>'POST'),
+                        // Other controllers
+                        '<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
+                    ),
+                ),*/
 		'db'=>array(
 			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
 		),
 		// uncomment the following to use a MySQL database
-		*/
+		
 		'db'=>array(
 			'connectionString' => 'mysql:host=localhost;dbname=lacomarca',
 			'emulatePrepare' => true,

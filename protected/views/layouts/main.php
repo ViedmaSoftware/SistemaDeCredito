@@ -29,11 +29,11 @@
                         'items' => array(
                             array('label' => 'Home', 'url' => array('/site/index')),
                             array('label' => 'Persona', 'items' => array(
-                                    array('label' => 'Agregar', 'url' => 'index.php?r=persona/create'),
-                                    array('label' => 'Buscar', 'url' => 'index.php?r=persona/admin'),                                    
-                                    array('label' => 'Agregar Tipo Documento', 'url' => 'index.php?r=tipoDocumento/create'),                                    
-                                    array('label' => 'Agregar Tipo Direccion', 'url' => 'index.php?r=tipoDireccion/create'),                                    
-                                    array('label' => 'Agregar Estado Civil', 'url' => 'index.php?r=estadoCivil/create',),                                    
+                                    array('label' => 'Agregar', 'url' => array('persona/create')),
+                                    array('label' => 'Buscar', 'url' => array('persona/admin')),                                    
+                                    array('label' => 'Agregar Tipo Documento', 'url' => array('tipoDocumento/create')),                                    
+                                    array('label' => 'Agregar Tipo Direccion', 'url' => array('tipoDireccion/create')),                                    
+                                    array('label' => 'Agregar Estado Civil', 'url' => array('estadoCivil/create')),                                    
                                     
                                 ),'visible'=>!Yii::app()->user->isGuest),
                             array('label'=>'Administrar Usuarios', 'url'=>Yii::app()->user->ui->userManagementAdminUrl, 'visible'=>!Yii::app()->user->isGuest),
