@@ -131,17 +131,10 @@ echo "</tbody>
         
         </tbody>
      </table>
-    
-    
-    
-
-
-
-
 
     
     <!-- Modal Formulario Direccion -->
-  <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" >
+  <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;" >
     <div class="modal-dialog">
       <div class="modal-content" >
         <div class="modal-header">
@@ -166,8 +159,8 @@ echo "</tbody>
           
         <div class="modal-footer">
           <button type="button" class="btn btn-default" ng-click="cancelar()" data-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-primary" ng-show="agregando" ng-click="agregarDireccion()" data-dismiss="modal">Agregar Dirección</button>
-          <button type="button" class="btn btn-success" ng-hide="agregando" ng-click="guardarDireccion()" data-dismiss="modal">Guardar Modificacion</button>
+          <button type="button" class="btn btn-primary" ng-show="agregando" ng-click="" data-dismiss="modal">Agregar Dirección</button>
+          <button type="button" class="btn btn-success" ng-hide="agregando" ng-click="" data-dismiss="modal">Guardar Modificacion</button>
           
         </div>
       </div>

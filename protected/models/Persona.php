@@ -90,14 +90,7 @@ class Persona extends BasePersona
 	}
 
 
-      /*  public function beforeValidate(){
-            if(!empty($this->nacimiento) && CDateTimeParser::parse($this->nacimiento,YII::app()->locale->dateFormat)){
-                $this->nacimiento = date('Y-m-d',CDateTimeParser::parse($this->nacimiento,Yii::app()->locale->dateFormat));
-            }
-            
-            return parent::beforeValidate();
-            
-        }*/
+     
 
 
 	/**
